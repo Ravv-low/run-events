@@ -1,6 +1,3 @@
-<p align="center">
-  <img src="https://ravv-low.github.io/run-events/public/images/events/banner-pacenation.png" alt="PaceNation Marathon Event Platform" width="100%">
-</p>
 # 🏃 PaceNation - Platform Maraton & Event Lari (Laravel 11)
 
 **PaceNation** adalah platform manajemen maraton dan event lari modern berbasis **Laravel 11**. Platform ini dilengkapi dengan sistem autentikasi role-based, manajemen tiket E-BIB digital, kupon promo, dan **fitur pengelolaan slot kuota event otomatis**.
