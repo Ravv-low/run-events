@@ -1,6 +1,9 @@
 # 🏃 PaceNation - Marathon & Running Event Platform (Laravel 11)
 
 An end-to-end event management platform designed for marathon organizers and runners. Built with Laravel 11 and TailwindCSS, featuring real-time slot allocation, concurrency protection, and role-based access control.
+---
+
+> 🚀 **Live Demo:** [PaceNation Live Website](https://ravv-low.github.io/run-events/)
 
 ---
 
