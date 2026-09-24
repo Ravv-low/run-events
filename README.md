@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/images/events/preview.png" alt="PaceNation Marathon Event Platform" width="100%">
+  <img src="https://ravv-low.github.io/run-events/public/images/events/banner-pacenation.png" alt="PaceNation Marathon Event Platform" width="100%">
 </p>
 # 🏃 PaceNation - Platform Maraton & Event Lari (Laravel 11)
 
