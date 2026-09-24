@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="id" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaceNation - Platform Event Maraton & Lari (Live Interactive Demo)</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            orange: '#FF4500',
+                            lime: '#A3E635',
+                            dark: '#050811',
+                            card: 'rgba(15, 23, 42, 0.85)',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                        sport: ['"Plus Jakarta Sans"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #050811;
+            color: #F8FAFC;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 69, 0, 0.4);
+        }
+        /* Custom Print Styling for E-BIB Card */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-bib, #printable-bib * {
+                visibility: visible;
+            }
+            #printable-bib {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-orange-500 selection:text-white">
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 glass-card border-b border-slate-800/80 px-4 lg:px-8 py-4 transition-all">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="javascript:void(0)" onclick="navigateTo('home')" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white font-extrabold text-xl shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-extrabold text-2xl tracking-wider text-white uppercase font-sport">
+                        PACE<span class="text-orange-500">NATION</span>
+                    </span>
+                    <span class="text-[10px] tracking-widest text-slate-400 -mt-1 font-semibold uppercase">Marathon Platform (Live Demo)</span>
+                </div>
+            </a>
+
+            <!-- Nav Links -->
+            <div class="hidden md:flex items-center gap-6">
+                <button onclick="navigateTo('home')" class="text-sm font-semibold text-slate-300 hover:text-orange-400 transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-compass text-slate-500"></i> Event Lari
+                </button>
+                <div id="nav-role-links" class="flex items-center gap-6">
+                    <!-- Dynamic links injected via JS based on login role -->
+                </div>
+            </div>
+
+            <!-- User Auth Bar -->
+            <div class="flex items-center gap-3" id="auth-actions-bar">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Global Toast Alert Container -->
+    <div id="toast-container" class="max-w-7xl mx-auto w-full px-4 lg:px-8 mt-4"></div>
+
+    <!-- Main Dynamic Views Container -->
+    <main class="flex-grow py-6">
+        <!-- 1. LANDING PAGE VIEW -->
+        <div id="view-home" class="view-section max-w-7xl mx-auto px-4 lg:px-8 space-y-12">
+            <!-- Hero Section -->
+            <section class="relative rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-orange-950/40 border border-slate-800 p-8 lg:p-14">
+                <div class="absolute -top-24 -right-24 w-96 h-96 bg-orange-600/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-lime-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/30 px-3.5 py-1.5 rounded-full">
+                            <span class="w-2 h-2 rounded-full bg-orange-500 animate-ping"></span>
+                            <span class="text-xs font-bold text-orange-400 tracking-wider uppercase"><i class="fa-solid fa-fire me-1"></i> Running Season 2026</span>
+                        </div>
+
+                        <h1 class="text-4xl lg:text-6xl font-black tracking-tight text-white uppercase font-sport leading-[1.1]">
+                            PECAHKAN REKOR<br/>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-amber-400 to-lime-400">PERSONAL BEST-MU!</span>
+                        </h1>
+
+                        <p class="text-slate-300 text-base lg:text-lg leading-relaxed max-w-xl">
+                            Platform pendaftaran resmi event maraton, 10K, dan fun run di seluruh Indonesia. Dapatkan E-BIB Digital eksklusif, rute terverifikasi, dan jaminan kuota resmi.
+                        </p>
+
+                        <div class="flex flex-wrap items-center gap-4 pt-2">
+                            <a href="#catalog-anchor" class="bg-orange-500 hover:bg-orange-600 text-white font-extrabold text-sm px-8 py-4 rounded-2xl shadow-xl shadow-orange-500/30 hover:shadow-orange-500/50 transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-person-running text-lg"></i> EXPLORE EVENT LARI
+                            </a>
+                            <button onclick="switchRole('peserta')" class="glass-card hover:bg-slate-800/80 text-white font-bold text-sm px-6 py-4 rounded-2xl transition-all border border-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-user me-1 text-orange-400"></i> Demo Akun Peserta
+                            </button>
+                            <button onclick="switchRole('admin')" class="glass-card hover:bg-slate-800/80 text-white font-bold text-sm px-6 py-4 rounded-2xl transition-all border border-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-user-gear me-1 text-amber-400"></i> Demo Akun Admin
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-800/80 max-w-lg">
+                            <div>
+                                <p class="text-2xl lg:text-3xl font-extrabold text-white font-sport">15K+</p>
+                                <p class="text-xs text-slate-400 font-medium">Pelari Terdaftar</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl lg:text-3xl font-extrabold text-orange-400 font-sport">100%</p>
+                                <p class="text-xs text-slate-400 font-medium">E-BIB Instant</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl lg:text-3xl font-extrabold text-lime-400 font-sport">50+</p>
+                                <p class="text-xs text-slate-400 font-medium">Official Races</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- E-BIB Preview Card Floating Graphic -->
+                    <div class="lg:col-span-5 flex justify-center">
+                        <div class="relative w-full max-w-sm">
+                            <div class="glass-card rounded-3xl p-6 border-2 border-orange-500/40 shadow-2xl relative z-10 transform lg:rotate-2 hover:rotate-0 transition-transform duration-300">
+                                <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+                                    <span class="text-xs font-black text-orange-400 tracking-widest uppercase">PACENATION OFFICIAL</span>
+                                    <span class="bg-lime-400/20 text-lime-400 border border-lime-400/30 text-[10px] font-bold px-2.5 py-0.5 rounded-full">CONFIRMED</span>
+                                </div>
+                                <div class="text-center py-6">
+                                    <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">JAKARTA NIGHT RUN 2026</p>
+                                    <h2 class="text-5xl font-black text-orange-500 font-sport tracking-widest my-2">
+                                        BIB-10K-0001
+                                    </h2>
+                                    <p class="text-lg font-bold text-slate-200 uppercase">RUNNER PRO</p>
+                                    <div class="inline-block bg-slate-800 text-slate-300 text-xs font-bold px-3 py-1 rounded-md mt-2">
+                                        CATEGORY: 10K • SIZE: L
+                                    </div>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl flex items-center justify-between text-slate-900">
+                                    <div class="flex items-center gap-1">
+                                        <i class="fa-solid fa-qrcode text-3xl"></i>
+                                        <div class="text-[9px] font-bold leading-tight ms-2">
+                                            VERIFIED RACE ID<br/>#PACENATION-2026
+                                        </div>
+                                    </div>
+                                    <i class="fa-solid fa-barcode text-3xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Catalog Section -->
+            <section id="catalog-anchor" class="space-y-6">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-2xl lg:text-3xl font-black text-white uppercase font-sport">
+                            KATALOG <span class="text-orange-500">EVENT LARI</span>
+                        </h2>
+                        <p class="text-slate-400 text-sm">Pilih kategori jarak dan daftarkan dirimu sebelum kuota habis!</p>
+                    </div>
+
+                    <!-- Filter Category Pills -->
+                    <div class="flex flex-wrap items-center gap-2" id="category-filter-pills">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Event Bento Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="events-grid-container">
+                    <!-- Injected via JS -->
+                </div>
+            </section>
+        </div>
+
+        <!-- 2. EVENT DETAIL & CHECKOUT VIEW -->
+        <div id="view-event-detail" class="view-section hidden max-w-7xl mx-auto px-4 lg:px-8 space-y-8">
+            <button onclick="navigateTo('home')" class="inline-flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-orange-400 transition-colors">
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke Katalog Event
+            </button>
+            <div id="event-detail-content"></div>
+        </div>
+
+        <!-- 3. PARTICIPANT DASHBOARD & E-BIB VIEW -->
+        <div id="view-dashboard" class="view-section hidden max-w-7xl mx-auto px-4 lg:px-8 space-y-8">
+            <div id="participant-dashboard-content"></div>
+        </div>
+
+        <!-- 4. ADMIN DASHBOARD VIEW -->
+        <div id="view-admin" class="view-section hidden max-w-7xl mx-auto px-4 lg:px-8 space-y-8">
+            <div id="admin-dashboard-content"></div>
+        </div>
+    </main>
+
+    <!-- Modal Form Tambah / Edit Event (Admin) -->
+    <div id="modal-event" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="glass-card rounded-3xl p-6 lg:p-8 border border-slate-800 max-w-2xl w-full space-y-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <h3 class="text-xl font-black text-white uppercase font-sport" id="modal-event-title">TAMBAH EVENT BARU</h3>
+                <button onclick="closeEventModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form id="form-event-admin" onsubmit="handleSaveEvent(event)" class="space-y-4">
+                <input type="hidden" id="event-id-field">
+                
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-300 mb-1">Judul Event *</label>
+                    <input type="text" id="event-title-input" required class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-4 text-xs font-bold text-white focus:outline-none focus:border-orange-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-300 mb-1">Kategori *</label>
+                        <select id="event-category-input" required class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-4 text-xs font-bold text-white focus:outline-none focus:border-orange-500">
+                            <option value="5K">5K</option>
+                            <option value="10K">10K</option>
+                            <option value="Half Marathon">Half Marathon</option>
+                            <option value="Full Marathon">Full Marathon</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-300 mb-1">Harga (Rp) *</label>
+                        <input type="number" id="event-price-input" required min="0" step="1000" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-4 text-xs font-bold text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-300 mb-1">Lokasi *</label>
+                        <input type="text" id="event-location-input" required class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-4 text-xs font-bold text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-300 mb-1">Kuota Peserta *</label>
+                        <input type="number" id="event-quota-input" required min="1" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-4 text-xs font-bold text-white focus:outline-none focus:border-orange-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-300 mb-1">Tanggal & Waktu Flag-off *</label>
+                    <input type="datetime-local" id="event-date-input" required class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-4 text-xs font-bold text-white focus:outline-none focus:border-orange-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-300 mb-1">Deskripsi *</label>
+                    <textarea id="event-desc-input" rows="3" required class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs font-bold text-white focus:outline-none focus:border-orange-500"></textarea>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+                    <button type="button" onclick="closeEventModal()" class="bg-slate-800 text-slate-300 font-bold text-xs px-5 py-2.5 rounded-xl">Batal</button>
+                    <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-extrabold text-xs px-6 py-2.5 rounded-xl shadow-lg shadow-orange-500/25">Simpan Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-10 px-4 lg:px-8 mt-12 text-slate-400">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded bg-orange-500 flex items-center justify-center text-white font-bold text-xs"><i class="fa-solid fa-bolt"></i></div>
+                <span class="font-black text-white">PACENATION PLATFORM</span>
+                <span>&copy; 2026 PaceNation Final Project</span>
+            </div>
+            <p class="text-orange-400 font-semibold"><i class="fa-solid fa-circle-check me-1"></i> Full Interactive Web App Ready</p>
+        </div>
+    </footer>
+
+    <!-- App Application Script -->
+    <script>
+        // Data State Management (LocalStorage synced)
+        const DEFAULT_USERS = {
+            admin: { id: 1, name: 'Admin PaceNation', email: 'admin@pacenation.com', role: 'admin', phone: '081234567890' },
+            peserta: { id: 2, name: 'Runner Pro', email: 'runner@pacenation.com', role: 'peserta', phone: '089876543210' }
+        };
+
+        const DEFAULT_EVENTS = [
+            {
+                id: 1,
+                title: 'Jakarta International 10K Night Run 2026',
+                slug: 'jakarta-international-10k-night-run-2026',
+                category: '10K',
+                description: 'Sensasi berlari malam hari melintasi kawasan sudirman-thamrin dengan suasana perkotaan yang megah dan gemerlap lampu Jakarta. Lengkap dengan water station melimpah, tim medis siaga, dan medali finisher eksklusif.',
+                location: 'GBK Senayan, Jakarta Pusat',
+                event_date: '2026-09-15T19:00',
+                price: 250000,
+                quota: 100,
+                paid_count: 42
+            },
+            {
+                id: 2,
+                title: 'Bali Sunset Half Marathon 2026',
+                slug: 'bali-sunset-half-marathon-2026',
+                category: 'Half Marathon',
+                description: 'Taklukkan rute 21K menyusuri pesisir pantai pulau dewata saat matahari terbenam. Pemandangan eksotis, pantai pasir putih, dan sambutan hangat warga lokal siap menemani setiap langkah maraton Anda.',
+                location: 'Kuta Beach Boardwalk, Bali',
+                event_date: '2026-10-20T16:30',
+                price: 450000,
+                quota: 50,
+                paid_count: 18
+            },
+            {
+                id: 3,
+                title: 'Borobudur Heritage Full Marathon 2026',
+                slug: 'borobudur-heritage-full-marathon-2026',
+                category: 'Full Marathon',
+                description: 'Ajang lari maraton 42K tingkat internasional mengelilingi warisan budaya dunia Candi Borobudur. Rute asri pedesaan Jawa Tengah dengan latar perbukitan Menoreh yang memukau.',
+                location: 'Taman Wisata Candi Borobudur, Magelang',
+                event_date: '2026-11-12T04:30',
+                price: 650000,
+                quota: 30,
+                paid_count: 29
+            },
+            {
+                id: 4,
+                title: 'Bandung Dago 5K Fun Run 2026',
+                slug: 'bandung-dago-5k-fun-run-2026',
+                category: '5K',
+                description: 'Lari santai 5 kilometer menikmati udara sejuk Kota Bandung di kawasan Dago yang rindang. Cocok untuk semua kalangan pelari pemula dan keluarga.',
+                location: 'Halaman Gedung Sate, Bandung',
+                event_date: '2026-08-05T06:00',
+                price: 150000,
+                quota: 150,
+                paid_count: 85
+            }
+        ];
+
+        const DEFAULT_COUPONS = [
+            { code: 'EARLYBIRD', discount_percent: 20, quota: 50, expires_at: '2026-12-31' },
+            { code: 'RUNNER50', discount_percent: 50, quota: 10, expires_at: '2026-12-31' }
+        ];
+
+        const DEFAULT_REGISTRATIONS = [
+            {
+                id: 1,
+                user_id: 2,
+                event_id: 1,
+                user_name: 'Runner Pro',
+                user_email: 'runner@pacenation.com',
+                bib_number: 'BIB-10K-0001',
+                jersey_size: 'L',
+                total_price: 200000,
+                payment_status: 'paid',
+                created_at: '2026-07-20'
+            }
+        ];
+
+        // App Initializer
+        let state = {
+            currentUser: JSON.parse(localStorage.getItem('pace_user')) || DEFAULT_USERS.peserta,
+            events: JSON.parse(localStorage.getItem('pace_events')) || DEFAULT_EVENTS,
+            coupons: JSON.parse(localStorage.getItem('pace_coupons')) || DEFAULT_COUPONS,
+            registrations: JSON.parse(localStorage.getItem('pace_registrations')) || DEFAULT_REGISTRATIONS,
+            currentCategoryFilter: 'ALL',
+            selectedEventId: null
+        };
+
+        function saveState() {
+            localStorage.setItem('pace_user', JSON.stringify(state.currentUser));
+            localStorage.setItem('pace_events', JSON.stringify(state.events));
+            localStorage.setItem('pace_coupons', JSON.stringify(state.coupons));
+            localStorage.setItem('pace_registrations', JSON.stringify(state.registrations));
+        }
+
+        function switchRole(role) {
+            state.currentUser = DEFAULT_USERS[role];
+            saveState();
+            renderNavbar();
+            showToast(`Berhasil beralih ke Akun ${role.toUpperCase()}`, 'success');
+            if (role === 'admin') {
+                navigateTo('admin');
+            } else {
+                navigateTo('home');
+            }
+        }
+
+        function renderNavbar() {
+            const roleLinks = document.getElementById('nav-role-links');
+            const authBar = document.getElementById('auth-actions-bar');
+
+            if (state.currentUser.role === 'admin') {
+                roleLinks.innerHTML = `
+                    <button onclick="navigateTo('admin')" class="text-sm font-bold text-amber-400 hover:text-amber-300 transition-colors">
+                        <i class="fa-solid fa-chart-line me-1"></i> Admin Panel
+                    </button>
+                `;
+            } else {
+                roleLinks.innerHTML = `
+                    <button onclick="navigateTo('dashboard')" class="text-sm font-bold text-orange-400 hover:text-orange-300 transition-colors">
+                        <i class="fa-solid fa-id-card me-1"></i> Dashboard & E-BIB
+                    </button>
+                `;
+            }
+
+            authBar.innerHTML = `
+                <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 rounded-full py-1.5 px-3">
+                    <div class="w-8 h-8 rounded-full ${state.currentUser.role === 'admin' ? 'bg-amber-500' : 'bg-orange-500'} flex items-center justify-center font-bold text-white text-xs">
+                        ${state.currentUser.name.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div class="hidden sm:block text-left pr-1">
+                        <p class="text-xs font-bold text-slate-200 leading-tight">${state.currentUser.name}</p>
+                        <p class="text-[10px] ${state.currentUser.role === 'admin' ? 'text-amber-400' : 'text-orange-400'} uppercase font-bold">${state.currentUser.role}</p>
+                    </div>
+                    <button onclick="switchRole('${state.currentUser.role === 'admin' ? 'peserta' : 'admin'}')" class="text-slate-400 hover:text-white text-xs px-2 py-1 rounded bg-slate-800" title="Switch Demo Account">
+                        <i class="fa-solid fa-arrows-rotate me-1"></i> Switch
+                    </button>
+                </div>
+            `;
+        }
+
+        function navigateTo(viewName, paramId = null) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            
+            if (viewName === 'home') {
+                document.getElementById('view-home').classList.remove('hidden');
+                renderCatalog();
+            } else if (viewName === 'event-detail') {
+                state.selectedEventId = paramId;
+                document.getElementById('view-event-detail').classList.remove('hidden');
+                renderEventDetail();
+            } else if (viewName === 'dashboard') {
+                document.getElementById('view-dashboard').classList.remove('hidden');
+                renderParticipantDashboard();
+            } else if (viewName === 'admin') {
+                document.getElementById('view-admin').classList.remove('hidden');
+                renderAdminDashboard();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Render Catalog & Bento Grid
+        function renderCatalog() {
+            const categories = ['ALL', '5K', '10K', 'Half Marathon', 'Full Marathon'];
+            const pillsContainer = document.getElementById('category-filter-pills');
+            pillsContainer.innerHTML = categories.map(cat => `
+                <button onclick="filterCategory('${cat}')" 
+                        class="px-4 py-2 rounded-xl text-xs font-bold transition-all ${state.currentCategoryFilter === cat ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25' : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'}">
+                    ${cat === 'ALL' ? 'Semua Event' : cat}
+                </button>
+            `).join('');
+
+            const filteredEvents = state.currentCategoryFilter === 'ALL' 
+                ? state.events 
+                : state.events.filter(e => e.category === state.currentCategoryFilter);
+
+            const gridContainer = document.getElementById('events-grid-container');
+            if (filteredEvents.length === 0) {
+                gridContainer.innerHTML = `
+                    <div class="col-span-full glass-card rounded-2xl p-12 text-center border border-slate-800">
+                        <i class="fa-solid fa-calendar-xmark text-4xl text-slate-600 mb-3"></i>
+                        <p class="font-bold text-white text-base">Belum ada event untuk kategori ini.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            gridContainer.innerHTML = filteredEvents.map(event => {
+                const remaining = Math.max(0, event.quota - event.paid_count);
+                const percentage = Math.min(100, Math.round((event.paid_count / event.quota) * 100));
+                const isSoldOut = remaining <= 0;
+
+                return `
+                    <div class="glass-card rounded-2xl overflow-hidden border border-slate-800 hover:border-orange-500/50 transition-all flex flex-col justify-between group">
+                        <div class="relative h-44 bg-gradient-to-tr from-slate-950 via-slate-900 to-orange-950/60 p-6 flex items-center justify-center overflow-hidden">
+                            <i class="fa-solid fa-person-running text-7xl text-slate-800 absolute opacity-30 right-4 bottom-2"></i>
+                            <span class="font-sport font-black text-xl text-slate-700 uppercase tracking-widest text-center">PACENATION RACE</span>
+                            
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-orange-500 text-white font-extrabold text-[10px] uppercase px-3 py-1 rounded-lg">
+                                    ${event.category}
+                                </span>
+                            </div>
+                            <div class="absolute top-4 right-4">
+                                <span class="${isSoldOut ? 'bg-rose-600 text-white' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'} font-bold text-[10px] uppercase px-3 py-1 rounded-lg">
+                                    ${isSoldOut ? 'SOLD OUT' : 'OPEN REGISTRATION'}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="p-6 space-y-4 flex-grow flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-extrabold text-lg text-white group-hover:text-orange-400 transition-colors line-clamp-2">
+                                    ${event.title}
+                                </h3>
+                                <div class="mt-3 space-y-1.5 text-xs text-slate-400">
+                                    <p><i class="fa-solid fa-calendar-day text-orange-500 me-2"></i> ${new Date(event.event_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })} WIB</p>
+                                    <p><i class="fa-solid fa-location-dot text-orange-500 me-2"></i> ${event.location}</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4 pt-4 border-t border-slate-800/80">
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold mb-1">
+                                        <span class="text-slate-400">Sisa Kuota:</span>
+                                        <span class="${isSoldOut ? 'text-rose-400 font-bold' : 'text-lime-400'}">${remaining} / ${event.quota} Slot</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                                        <div class="h-full bg-gradient-to-r from-orange-500 to-lime-400 transition-all duration-500" style="width: ${percentage}%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between pt-2">
+                                    <div>
+                                        <p class="text-[10px] uppercase font-bold text-slate-400">Biaya Pendaftaran</p>
+                                        <p class="text-lg font-black text-white font-sport">Rp ${new Intl.NumberFormat('id-ID').format(event.price)}</p>
+                                    </div>
+                                    <button onclick="navigateTo('event-detail', ${event.id})" class="px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all shadow-lg ${isSoldOut ? 'bg-slate-800 text-slate-500' : 'bg-orange-500 hover:bg-orange-600 text-white shadow-orange-500/20'}">
+                                        ${isSoldOut ? 'Detail Event' : 'Daftar Sekarang'} <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterCategory(cat) {
+            state.currentCategoryFilter = cat;
+            renderCatalog();
+        }
+
+        // Render Event Detail & Checkout Form
+        function renderEventDetail() {
+            const event = state.events.find(e => e.id === state.selectedEventId);
+            if (!event) return;
+
+            const remaining = Math.max(0, event.quota - event.paid_count);
+            const percentage = Math.min(100, Math.round((event.paid_count / event.quota) * 100));
+            const isSoldOut = remaining <= 0;
+
+            const content = document.getElementById('event-detail-content');
+            content.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="glass-card rounded-3xl p-6 lg:p-8 border border-slate-800 space-y-6">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-orange-500 text-white font-extrabold text-xs px-3.5 py-1.5 rounded-xl uppercase">${event.category}</span>
+                                <span class="${isSoldOut ? 'bg-rose-950 text-rose-400 border border-rose-800' : 'bg-emerald-950 text-emerald-400 border border-emerald-800'} text-xs font-bold px-3.5 py-1.5 rounded-xl">
+                                    ${isSoldOut ? 'SOLD OUT' : 'KUOTA TERSEDIA'}
+                                </span>
+                            </div>
+
+                            <h1 class="text-3xl font-black text-white font-sport uppercase tracking-wide">${event.title}</h1>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-800">
+                                <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 flex items-start gap-3">
+                                    <i class="fa-solid fa-calendar-days text-orange-500 text-lg mt-0.5"></i>
+                                    <div>
+                                        <p class="text-[11px] font-bold text-slate-400 uppercase">Flag-Off Date</p>
+                                        <p class="text-sm font-bold text-white mt-0.5">${new Date(event.event_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 flex items-start gap-3">
+                                    <i class="fa-solid fa-location-dot text-amber-500 text-lg mt-0.5"></i>
+                                    <div>
+                                        <p class="text-[11px] font-bold text-slate-400 uppercase">Race Location</p>
+                                        <p class="text-sm font-bold text-white mt-0.5">${event.location}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 space-y-2">
+                                <div class="flex justify-between text-xs font-bold">
+                                    <span class="text-slate-300">Sisa Kuota Race:</span>
+                                    <span class="${remaining > 0 ? 'text-lime-400' : 'text-rose-400'}">${remaining} / ${event.quota} Slot Tersisa</span>
+                                </div>
+                                <div class="w-full h-3 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                                    <div class="h-full bg-gradient-to-r from-orange-500 to-lime-400" style="width: ${percentage}%"></div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3 pt-4 border-t border-slate-800">
+                                <h3 class="font-extrabold text-white text-base uppercase font-sport">Deskripsi Race</h3>
+                                <p class="text-slate-300 text-sm leading-relaxed">${event.description}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5">
+                        <div class="glass-card rounded-3xl p-6 lg:p-8 border-2 border-orange-500/40 sticky top-24 space-y-6">
+                            <div class="border-b border-slate-800 pb-3">
+                                <span class="text-xs font-extrabold text-orange-400 uppercase">FORM PENDAFTARAN</span>
+                                <h2 class="text-2xl font-black text-white font-sport uppercase">CHECKOUT RACE</h2>
+                            </div>
+
+                            ${isSoldOut ? `
+                                <div class="bg-rose-950/80 border border-rose-500/50 p-6 rounded-2xl text-center space-y-2">
+                                    <i class="fa-solid fa-circle-exclamation text-rose-400 text-3xl"></i>
+                                    <h3 class="font-bold text-white text-base">KUOTA HABIS</h3>
+                                    <p class="text-xs text-rose-200">Maaf event lari ini telah mencapai batas kuota peserta.</p>
+                                </div>
+                            ` : `
+                                <form onsubmit="handleRegistration(event, ${event.id})" class="space-y-5">
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase text-slate-300 mb-2">Ukuran Jersey *</label>
+                                        <div class="grid grid-cols-5 gap-2">
+                                            ${['S', 'M', 'L', 'XL', 'XXL'].map((sz, idx) => `
+                                                <label class="cursor-pointer">
+                                                    <input type="radio" name="jersey_size" value="${sz}" ${idx === 2 ? 'checked' : ''} class="peer hidden">
+                                                    <div class="py-2 text-center rounded-xl border border-slate-800 bg-slate-900 text-slate-300 font-extrabold text-xs peer-checked:bg-orange-500 peer-checked:text-white peer-checked:border-orange-500 transition-all">
+                                                        ${sz}
+                                                    </div>
+                                                </label>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase text-slate-300 mb-2">Kode Kupon Diskon</label>
+                                        <div class="flex gap-2">
+                                            <input type="text" id="coupon_input" placeholder="Contoh: EARLYBIRD" class="w-full bg-slate-900 border border-slate-800 rounded-xl py-2.5 px-3 text-xs font-bold uppercase text-white focus:outline-none focus:border-orange-500">
+                                            <button type="button" onclick="applyCoupon(${event.price})" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl border border-slate-700">Apply</button>
+                                        </div>
+                                        <p id="coupon_msg" class="text-xs font-semibold mt-1 hidden"></p>
+                                    </div>
+
+                                    <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
+                                        <div class="flex justify-between text-slate-400">
+                                            <span>Harga Normal:</span>
+                                            <span class="font-bold text-white">Rp ${new Intl.NumberFormat('id-ID').format(event.price)}</span>
+                                        </div>
+                                        <div class="flex justify-between text-slate-400 hidden" id="discount_row">
+                                            <span>Potongan Diskon:</span>
+                                            <span class="font-bold text-lime-400" id="discount_val">- Rp 0</span>
+                                        </div>
+                                        <div class="border-t border-slate-800 pt-2 flex justify-between items-center">
+                                            <span class="font-extrabold text-white uppercase">Total Bayar:</span>
+                                            <span class="font-black text-2xl text-orange-500 font-sport" id="final_price_val">Rp ${new Intl.NumberFormat('id-ID').format(event.price)}</span>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-extrabold text-xs py-3.5 rounded-xl shadow-lg shadow-orange-500/30 uppercase tracking-wider flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-bolt"></i> BAYAR & DAPATKAN E-BIB NOW
+                                    </button>
+                                </form>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        let appliedDiscount = 0;
+        let appliedCouponCode = null;
+
+        function applyCoupon(basePrice) {
+            const code = document.getElementById('coupon_input').value.trim().toUpperCase();
+            const msg = document.getElementById('coupon_msg');
+            const discountRow = document.getElementById('discount_row');
+            const discountVal = document.getElementById('discount_val');
+            const finalVal = document.getElementById('final_price_val');
+
+            const coupon = state.coupons.find(c => c.code === code);
+            if (coupon && coupon.quota > 0) {
+                appliedDiscount = (basePrice * coupon.discount_percent) / 100;
+                appliedCouponCode = coupon.code;
+                const finalPrice = basePrice - appliedDiscount;
+
+                discountRow.classList.remove('hidden');
+                discountVal.innerText = '- Rp ' + new Intl.NumberFormat('id-ID').format(appliedDiscount);
+                finalVal.innerText = 'Rp ' + new Intl.NumberFormat('id-ID').format(finalPrice);
+                
+                msg.className = 'text-xs font-semibold mt-1 text-lime-400 block';
+                msg.innerText = `✓ Kupon ${code} berhasil! Diskon ${coupon.discount_percent}%`;
+            } else {
+                appliedDiscount = 0;
+                appliedCouponCode = null;
+                discountRow.classList.add('hidden');
+                finalVal.innerText = 'Rp ' + new Intl.NumberFormat('id-ID').format(basePrice);
+                msg.className = 'text-xs font-semibold mt-1 text-rose-400 block';
+                msg.innerText = '✕ Kode kupon tidak valid atau kuota habis.';
+            }
+        }
+
+        function handleRegistration(e, eventId) {
+            e.preventDefault();
+            const event = state.events.find(ev => ev.id === eventId);
+            if (!event) return;
+
+            // Business Logic Check 1: Double Registration Check
+            const alreadyReg = state.registrations.find(r => r.user_id === state.currentUser.id && r.event_id === eventId && r.payment_status !== 'cancelled');
+            if (alreadyReg) {
+                showToast('Anda sudah terdaftar pada event ini! Silakan cek dashboard peserta Anda.', 'error');
+                return;
+            }
+
+            // Business Logic Check 2: Quota Validation
+            if (event.paid_count >= event.quota) {
+                showToast('Kuota Event Penuh / Sold Out!', 'error');
+                return;
+            }
+
+            // Business Logic Check 3: Auto Generate BIB Number: BIB-{KATEGORI}-{NOMOR_URUT_4_DIGIT}
+            const catMap = { '5K': '5K', '10K': '10K', 'Half Marathon': 'HALF', 'Full Marathon': 'FULL' };
+            const catCode = catMap[event.category] || 'RUN';
+            const seqNumber = state.registrations.filter(r => r.event_id === eventId).length + 1;
+            const bibNumber = `BIB-${catCode}-${String(seqNumber).padStart(4, '0')}`;
+
+            const jerseySize = document.querySelector('input[name="jersey_size"]:checked')?.value || 'L';
+            const finalPrice = Math.max(0, event.price - appliedDiscount);
+
+            // Deduct event quota & coupon quota
+            event.paid_count += 1;
+            if (appliedCouponCode) {
+                const cp = state.coupons.find(c => c.code === appliedCouponCode);
+                if (cp) cp.quota -= 1;
+            }
+
+            const newRegistration = {
+                id: state.registrations.length + 1,
+                user_id: state.currentUser.id,
+                event_id: event.id,
+                user_name: state.currentUser.name,
+                user_email: state.currentUser.email,
+                bib_number: bibNumber,
+                jersey_size: jerseySize,
+                total_price: finalPrice,
+                payment_status: 'paid',
+                created_at: new Date().toISOString().split('T')[0]
+            };
+
+            state.registrations.unshift(newRegistration);
+            saveState();
+
+            showToast(`Pendaftaran Berhasil! Nomor Dada Anda: ${bibNumber}`, 'success');
+            navigateTo('dashboard');
+        }
+
+        // Render Participant Dashboard & Digital E-BIB Card
+        function renderParticipantDashboard() {
+            const userRegs = state.registrations.filter(r => r.user_id === state.currentUser.id);
+            const container = document.getElementById('participant-dashboard-content');
+
+            container.innerHTML = `
+                <div class="glass-card rounded-3xl p-6 lg:p-8 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-500 flex items-center justify-center font-black text-2xl text-white shadow-lg shadow-orange-500/20">
+                            ${state.currentUser.name.substring(0, 2).toUpperCase()}
+                        </div>
+                        <div>
+                            <span class="text-xs font-extrabold text-orange-400 uppercase tracking-widest">RUNNER DASHBOARD</span>
+                            <h1 class="text-2xl font-black text-white uppercase font-sport mt-0.5">${state.currentUser.name}</h1>
+                            <p class="text-xs text-slate-400"><i class="fa-solid fa-envelope me-1"></i> ${state.currentUser.email}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <h2 class="text-xl font-black text-white uppercase font-sport flex items-center gap-2 border-b border-slate-800 pb-3">
+                        <i class="fa-solid fa-id-card text-orange-500"></i> KARTU E-BIB DIGITAL PESERTA
+                    </h2>
+
+                    ${userRegs.length === 0 ? `
+                        <div class="glass-card rounded-3xl p-12 text-center border border-slate-800 space-y-4">
+                            <i class="fa-solid fa-ticket-simple text-4xl text-slate-600"></i>
+                            <h3 class="font-bold text-white text-lg">Belum Ada Pendaftaran Event</h3>
+                            <button onclick="navigateTo('home')" class="bg-orange-500 hover:bg-orange-600 text-white font-extrabold text-xs px-6 py-3 rounded-xl uppercase">
+                                Cari Event Lari
+                            </button>
+                        </div>
+                    ` : `
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            ${userRegs.map(reg => {
+                                const ev = state.events.find(e => e.id === reg.event_id) || {};
+                                return `
+                                    <div id="printable-bib" class="relative bg-gradient-to-br from-slate-900 via-slate-950 to-orange-950/40 rounded-3xl p-6 lg:p-8 border-2 border-orange-500/50 shadow-2xl space-y-6 overflow-hidden">
+                                        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-6 h-6 rounded bg-orange-500 flex items-center justify-center text-white text-xs font-black"><i class="fa-solid fa-bolt"></i></div>
+                                                <span class="font-black text-lg text-white font-sport uppercase">PACE<span class="text-orange-500">NATION</span></span>
+                                            </div>
+                                            <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-bold px-3 py-1 rounded-full uppercase">
+                                                ✓ VERIFIED PAID
+                                            </span>
+                                        </div>
+
+                                        <div class="text-center space-y-1">
+                                            <p class="text-xs font-extrabold text-orange-400 uppercase tracking-widest">OFFICIAL RACE BIB</p>
+                                            <h3 class="text-xl font-black text-white font-sport uppercase">${ev.title || 'Event Race'}</h3>
+                                            <p class="text-xs text-slate-400">${ev.location || ''}</p>
+                                        </div>
+
+                                        <div class="bg-slate-900/90 rounded-2xl p-6 text-center border border-slate-800 relative shadow-inner">
+                                            <div class="w-3.5 h-3.5 rounded-full bg-slate-950 border border-slate-800 absolute top-3 left-4"></div>
+                                            <div class="w-3.5 h-3.5 rounded-full bg-slate-950 border border-slate-800 absolute top-3 right-4"></div>
+                                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">NOMOR DADA RUNNER</p>
+                                            <h2 class="text-5xl font-black text-orange-500 font-sport tracking-widest my-2">${reg.bib_number}</h2>
+                                            <p class="text-base font-extrabold text-white uppercase">${reg.user_name}</p>
+                                        </div>
+
+                                        <div class="grid grid-cols-3 gap-2 bg-slate-950/80 p-3 rounded-2xl border border-slate-800 text-center text-xs">
+                                            <div>
+                                                <p class="text-[10px] font-bold text-slate-500 uppercase">Kategori</p>
+                                                <p class="font-extrabold text-lime-400 mt-0.5">${ev.category || '10K'}</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[10px] font-bold text-slate-500 uppercase">Jersey Size</p>
+                                                <p class="font-extrabold text-white mt-0.5">${reg.jersey_size}</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[10px] font-bold text-slate-500 uppercase">Total Biaya</p>
+                                                <p class="font-extrabold text-orange-400 mt-0.5">Rp ${new Intl.NumberFormat('id-ID').format(reg.total_price)}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="bg-white p-3 rounded-2xl flex items-center justify-between text-slate-900">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fa-solid fa-qrcode text-3xl"></i>
+                                                <div class="text-[9px] font-extrabold leading-tight">OFFICIAL TIMING CHIP<br/>VERIFIED BY PACENATION</div>
+                                            </div>
+                                            <i class="fa-solid fa-barcode text-3xl"></i>
+                                        </div>
+
+                                        <div class="flex justify-end">
+                                            <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs px-4 py-2 rounded-xl border border-slate-700 flex items-center gap-2">
+                                                <i class="fa-solid fa-print"></i> Cetak E-BIB
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `}
+                </div>
+            `;
+        }
+
+        // Render Admin Dashboard
+        function renderAdminDashboard() {
+            const totalRevenue = state.registrations.filter(r => r.payment_status === 'paid').reduce((acc, curr) => acc + curr.total_price, 0);
+            const totalParticipants = state.registrations.filter(r => r.payment_status === 'paid').length;
+            const container = document.getElementById('admin-dashboard-content');
+
+            container.innerHTML = `
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <div>
+                        <span class="text-xs font-extrabold text-amber-400 uppercase">ADMIN MANAGEMENT</span>
+                        <h1 class="text-2xl font-black text-white font-sport uppercase">ADMIN DASHBOARD</h1>
+                    </div>
+                    <button onclick="openEventModal()" class="bg-orange-500 hover:bg-orange-600 text-white font-extrabold text-xs px-5 py-3 rounded-xl uppercase flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Tambah Event Baru
+                    </button>
+                </div>
+
+                <!-- Metrics -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-2">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Total Pendapatan</span>
+                        <p class="text-2xl font-black text-white font-sport">Rp ${new Intl.NumberFormat('id-ID').format(totalRevenue)}</p>
+                    </div>
+                    <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-2">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Total Peserta Paid</span>
+                        <p class="text-2xl font-black text-orange-400 font-sport">${totalParticipants} Runner</p>
+                    </div>
+                    <div class="glass-card rounded-2xl p-6 border border-slate-800 space-y-2">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Total Event Lari</span>
+                        <p class="text-2xl font-black text-lime-400 font-sport">${state.events.length} Event</p>
+                    </div>
+                </div>
+
+                <!-- Event Table -->
+                <div class="glass-card rounded-3xl p-6 border border-slate-800 space-y-4">
+                    <h3 class="font-extrabold text-white uppercase text-base font-sport">Kelola Event Lari</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left">
+                            <thead class="bg-slate-900 text-slate-400 uppercase font-bold">
+                                <tr>
+                                    <th class="p-3">Judul Event</th>
+                                    <th class="p-3">Kategori</th>
+                                    <th class="p-3">Harga</th>
+                                    <th class="p-3">Sisa Kuota</th>
+                                    <th class="p-3 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800 font-medium">
+                                ${state.events.map(ev => `
+                                    <tr>
+                                        <td class="p-3 font-bold text-white">${ev.title}</td>
+                                        <td class="p-3"><span class="bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded">${ev.category}</span></td>
+                                        <td class="p-3 font-bold">Rp ${new Intl.NumberFormat('id-ID').format(ev.price)}</td>
+                                        <td class="p-3 text-lime-400 font-bold">${Math.max(0, ev.quota - ev.paid_count)} / ${ev.quota} Slot</td>
+                                        <td class="p-3 text-center space-x-2">
+                                            <button onclick="editEvent(${ev.id})" class="text-amber-400 hover:underline"><i class="fa-solid fa-pen"></i> Edit</button>
+                                            <button onclick="deleteEvent(${ev.id})" class="text-rose-400 hover:underline"><i class="fa-solid fa-trash"></i> Hapus</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Registration Payment Verification Table -->
+                <div class="glass-card rounded-3xl p-6 border border-slate-800 space-y-4">
+                    <h3 class="font-extrabold text-white uppercase text-base font-sport">Verifikasi Pembayaran Peserta</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left">
+                            <thead class="bg-slate-900 text-slate-400 uppercase font-bold">
+                                <tr>
+                                    <th class="p-3">Nomor BIB</th>
+                                    <th class="p-3">Nama Runner</th>
+                                    <th class="p-3">Size</th>
+                                    <th class="p-3">Total Bayar</th>
+                                    <th class="p-3">Status</th>
+                                    <th class="p-3 text-center">Update Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800 font-medium">
+                                ${state.registrations.map(reg => `
+                                    <tr>
+                                        <td class="p-3 font-black text-orange-400 font-sport">${reg.bib_number}</td>
+                                        <td class="p-3 font-bold text-white">${reg.user_name}</td>
+                                        <td class="p-3 font-bold">${reg.jersey_size}</td>
+                                        <td class="p-3 font-bold">Rp ${new Intl.NumberFormat('id-ID').format(reg.total_price)}</td>
+                                        <td class="p-3"><span class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded uppercase font-bold">${reg.payment_status}</span></td>
+                                        <td class="p-3 text-center">
+                                            <select onchange="updatePaymentStatus(${reg.id}, this.value)" class="bg-slate-900 border border-slate-700 text-white rounded px-2 py-1">
+                                                <option value="paid" ${reg.payment_status === 'paid' ? 'selected' : ''}>Paid</option>
+                                                <option value="pending" ${reg.payment_status === 'pending' ? 'selected' : ''}>Pending</option>
+                                                <option value="cancelled" ${reg.payment_status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updatePaymentStatus(regId, newStatus) {
+            const reg = state.registrations.find(r => r.id === regId);
+            if (reg) {
+                reg.payment_status = newStatus;
+                saveState();
+                showToast(`Status pembayaran BIB ${reg.bib_number} diperbarui ke ${newStatus}`, 'success');
+                renderAdminDashboard();
+            }
+        }
+
+        // Modal Handlers
+        function openEventModal(eventId = null) {
+            const modal = document.getElementById('modal-event');
+            const title = document.getElementById('modal-event-title');
+            document.getElementById('form-event-admin').reset();
+            document.getElementById('event-id-field').value = '';
+
+            if (eventId) {
+                const ev = state.events.find(e => e.id === eventId);
+                if (ev) {
+                    title.innerText = 'EDIT EVENT MARATON';
+                    document.getElementById('event-id-field').value = ev.id;
+                    document.getElementById('event-title-input').value = ev.title;
+                    document.getElementById('event-category-input').value = ev.category;
+                    document.getElementById('event-price-input').value = ev.price;
+                    document.getElementById('event-location-input').value = ev.location;
+                    document.getElementById('event-quota-input').value = ev.quota;
+                    document.getElementById('event-date-input').value = ev.event_date;
+                    document.getElementById('event-desc-input').value = ev.description;
+                }
+            } else {
+                title.innerText = 'TAMBAH EVENT BARU';
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeEventModal() {
+            document.getElementById('modal-event').classList.add('hidden');
+        }
+
+        function handleSaveEvent(e) {
+            e.preventDefault();
+            const idField = document.getElementById('event-id-field').value;
+            const newEv = {
+                id: idField ? parseInt(idField) : state.events.length + 1,
+                title: document.getElementById('event-title-input').value,
+                slug: document.getElementById('event-title-input').value.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                category: document.getElementById('event-category-input').value,
+                price: parseFloat(document.getElementById('event-price-input').value),
+                location: document.getElementById('event-location-input').value,
+                quota: parseInt(document.getElementById('event-quota-input').value),
+                event_date: document.getElementById('event-date-input').value,
+                description: document.getElementById('event-desc-input').value,
+                paid_count: idField ? (state.events.find(e => e.id == idField)?.paid_count || 0) : 0
+            };
+
+            if (idField) {
+                const idx = state.events.findIndex(e => e.id == idField);
+                if (idx !== -1) state.events[idx] = newEv;
+            } else {
+                state.events.push(newEv);
+            }
+
+            saveState();
+            closeEventModal();
+            showToast('Data event berhasil disimpan!', 'success');
+            renderAdminDashboard();
+        }
+
+        function editEvent(id) {
+            openEventModal(id);
+        }
+
+        function deleteEvent(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus event ini?')) {
+                state.events = state.events.filter(e => e.id !== id);
+                saveState();
+                showToast('Event berhasil dihapus', 'success');
+                renderAdminDashboard();
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toast-container');
+            const colorClass = type === 'success' ? 'bg-emerald-950 border-emerald-500 text-emerald-300' : 'bg-rose-950 border-rose-500 text-rose-300';
+            const icon = type === 'success' ? 'fa-circle-check text-emerald-400' : 'fa-circle-exclamation text-rose-400';
+
+            const toast = document.createElement('div');
+            toast.className = `${colorClass} border px-4 py-3 rounded-2xl flex items-center justify-between shadow-lg mb-3 animate-bounce`;
+            toast.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid ${icon} text-lg"></i>
+                    <span class="text-xs font-semibold">${message}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-xs opacity-70 hover:opacity-100"><i class="fa-solid fa-xmark"></i></button>
+            `;
+            toastContainer.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            renderNavbar();
+            navigateTo('home');
+        });
+    </script>
+</body>
+</html>
